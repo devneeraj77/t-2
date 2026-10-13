@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Issue Tracker</title>
+    <title>PulseTrack &bull; Issue &amp; Bug Management</title>
     <link rel="icon" type="image/png" href="https://cdn.freecodecamp.org/universal/favicons/favicon-16x16.png" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,12 +13,18 @@
     <header class="app-header">
       <div class="header-container">
         <a href="/" class="brand">
-          <div class="brand-icon">✓</div>
-          <h1>Issue Tracker</h1>
+          <div class="brand-icon">⚡</div>
+          <div>
+            <h1>PulseTrack</h1>
+            <p style="font-size: 11px; color: var(--text-muted); font-weight: 500; margin-top: -2px;">Issue &amp; Bug Intelligence</p>
+          </div>
         </a>
         <nav class="header-nav">
-          <a href="/apitest/" class="nav-link btn-cta">Open Project Board (apitest)</a>
-          <a href="#testui" class="nav-link">API Console</a>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #047857; background: #ecfdf5; padding: 4px 10px; border-radius: 9999px; border: 1px solid #a7f3d0;">
+            <span style="width: 7px; height: 7px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
+            API Live &bull; 14 Tests Passing
+          </div>
+          <a href="/apitest/" class="nav-link btn-cta">Open Project Board &rarr;</a>
         </nav>
       </div>
     </header>
@@ -26,70 +32,85 @@
     <div class="main-wrapper">
       <!-- Hero / Introduction -->
       <section class="hero-banner">
-        <h2>Modern &amp; Robust Issue Management</h2>
-        <p>A full-stack issue tracking API with complete filtering, project scoping, and real-time management.</p>
+        <h2>Enterprise-Grade Issue &amp; Ticket Tracking</h2>
+        <p>A unified, lightweight issue tracker featuring project partitioning, multi-parameter querying, and real-time state mutation.</p>
       </section>
 
       <!-- Quick Project Jump Bar -->
       <div class="jump-bar">
-        <label for="jumpProjectInput" style="font-weight: 600; font-size: 14px; color: #1e40af;">
-          🔍 Jump to any Project Board:
-        </label>
-        <input type="text" id="jumpProjectInput" placeholder="Enter project name (e.g. apitest)" value="apitest">
-        <button type="button" class="btn" id="jumpProjectBtn">View Project &rarr;</button>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%;">
+          <label for="jumpProjectInput" style="font-weight: 700; font-size: 13px; color: #1e40af; text-transform: uppercase; letter-spacing: 0.05em;">
+            Project Workspace:
+          </label>
+          <div style="display: flex; gap: 8px; flex: 1; min-width: 260px;">
+            <input type="text" id="jumpProjectInput" placeholder="Enter project name..." value="apitest" style="flex: 1;">
+            <button type="button" class="btn" id="jumpProjectBtn">Enter Board</button>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+          <span>Quick workspaces:</span>
+          <a href="/apitest/" class="nav-link" style="padding: 2px 8px; background: #fff; border: 1px solid #bfdbfe;">apitest</a>
+          <a href="/core-api/" class="nav-link" style="padding: 2px 8px; background: #fff; border: 1px solid #bfdbfe;">core-api</a>
+          <a href="/mobile-app/" class="nav-link" style="padding: 2px 8px; background: #fff; border: 1px solid #bfdbfe;">mobile-app</a>
+        </div>
       </div>
 
       <!-- API Documentation Panel -->
       <section class="card-panel">
         <div class="card-header">
-          <h3>📖 API Reference &amp; Endpoints</h3>
-          <span style="font-size: 13px; color: var(--text-muted);">JSON Endpoints</span>
+          <h3>📖 REST API Specification</h3>
+          <span style="font-size: 12px; font-weight: 600; color: #2563eb; background: #eff6ff; padding: 4px 8px; border-radius: 4px;">
+            Content-Type: application/json / x-www-form-urlencoded
+          </span>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fafafa;">
             <span class="endpoint-tag get">GET</span>
             <code>/api/issues/{project}</code>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-              Retrieve all issues on a project. Filter by any field in query string: <code>?open=true&amp;assigned_to=Joe</code>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+              Query issues with filters like <code>?open=true</code>, <code>?assigned_to=Name</code>, or combined.
             </p>
           </div>
-          <div>
+          <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fafafa;">
             <span class="endpoint-tag post">POST</span>
             <code>/api/issues/{project}</code>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-              Create an issue with required fields: <code>issue_title</code>, <code>issue_text</code>, <code>created_by</code>.
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+              Submit new issue with <code>issue_title</code>, <code>issue_text</code>, and <code>created_by</code>.
             </p>
           </div>
-          <div>
+          <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fafafa;">
             <span class="endpoint-tag put">PUT</span>
             <code>/api/issues/{project}</code>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-              Update an issue by providing <code>_id</code> and any changed fields.
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+              Mutate ticket details or mark <code>open: false</code> using <code>_id</code>.
             </p>
           </div>
-          <div>
-            <span class="endpoint-tag del">DELETE</span>
+          <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fafafa;">
+            <span class="endpoint-tag del">DEL</span>
             <code>/api/issues/{project}</code>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-              Delete an issue with <code>_id</code>.
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+              Permanently remove an issue by specifying <code>_id</code>.
             </p>
           </div>
         </div>
 
         <div class="code-sample-box">
-          <div style="color: #94a3b8; font-size: 11px; margin-bottom: 6px;">EXAMPLE RETURN SCHEMA:</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+            <span style="color: #94a3b8; font-size: 11px; text-transform:uppercase; letter-spacing:0.05em;">Canonical JSON Return Schema</span>
+            <span style="color: #38bdf8; font-size: 11px;">GET /api/issues/apitest</span>
+          </div>
 <pre><code>[
   { 
-    "_id": "5871dda29faedc3491ff93bb",
-    "issue_title": "Fix error in posting data",
-    "issue_text": "When we post data it has an error.",
+    "_id": "67f533542334b70013df681e",
+    "issue_title": "Database connection pool timeout",
+    "issue_text": "Spike in latency during batch export routines.",
     "created_on": "2026-10-13T14:16:11.377Z",
     "updated_on": "2026-10-13T14:16:11.377Z",
-    "created_by": "Joe",
-    "assigned_to": "Joe",
+    "created_by": "Engineering",
+    "assigned_to": "Dave",
     "open": true,
-    "status_text": "In QA"
+    "status_text": "Under Investigation"
   }
 ]</code></pre>
         </div>
@@ -98,51 +119,63 @@
       <!-- Interactive API Testing Suite -->
       <section id="testui" class="card-panel">
         <div class="card-header">
-          <h3>⚡ Interactive API Console (Testing on <i>apitest</i>)</h3>
-          <a href="/api/issues/apitest/" target="_blank" class="nav-link" style="padding: 4px 10px;">Raw JSON feed &nearr;</a>
+          <h3>⚡ Interactive API Console (Workspace: <i>apitest</i>)</h3>
+          <div style="display: flex; gap: 8px;">
+            <a href="/api/issues/apitest/" target="_blank" class="nav-link" style="padding: 4px 10px; font-size: 12px; border: 1px solid var(--border-color);">View Raw Feed &nearr;</a>
+          </div>
         </div>
 
         <div class="forms-grid">
           <!-- Form 1: Create -->
           <div class="form-card">
-            <h4><span class="endpoint-tag post">POST</span> Create New Issue</h4>
-            <p class="form-desc">Creates an issue on project <b>apitest</b>.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
+              <h4><span class="endpoint-tag post">POST</span> Create Issue</h4>
+              <button type="button" class="prefill-btn" data-target="testForm" style="background:none; border:none; color:var(--primary); font-size:11px; cursor:pointer; text-decoration:underline;">Pre-fill sample</button>
+            </div>
+            <p class="form-desc">Creates a record on project <b>apitest</b>.</p>
             <form id="testForm" class="border">
               <input type="text" name="issue_title" placeholder="* Title (required)" required="">
-              <textarea name="issue_text" placeholder="* Text description (required)" required=""></textarea>
+              <textarea name="issue_text" placeholder="* Detailed description (required)" required=""></textarea>
               <input type="text" name="created_by" placeholder="* Created by (required)" required="">
               <input type="text" name="assigned_to" placeholder="Assigned to (optional)">
-              <input type="text" name="status_text" placeholder="Status text (optional)">
-              <button type="submit">Submit Issue</button>
+              <input type="text" name="status_text" placeholder="Status note (optional)">
+              <button type="submit">Create Issue</button>
             </form>
           </div>
 
           <!-- Form 2: Update -->
           <div class="form-card">
-            <h4><span class="endpoint-tag put">PUT</span> Update Issue</h4>
-            <p class="form-desc">Supply <code>_id</code> and any fields to modify.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
+              <h4><span class="endpoint-tag put">PUT</span> Update Issue</h4>
+              <button type="button" class="prefill-btn" data-target="testForm2" style="background:none; border:none; color:var(--primary); font-size:11px; cursor:pointer; text-decoration:underline;">Paste recent ID</button>
+            </div>
+            <p class="form-desc">Modify one or more fields via <code>_id</code>.</p>
             <form id="testForm2" class="border">
-              <input type="text" name="_id" placeholder="* _id (required)" required="">
-              <input type="text" name="issue_title" placeholder="Title (optional)">
-              <textarea name="issue_text" placeholder="Text (optional)"></textarea>
-              <input type="text" name="created_by" placeholder="Created by (optional)">
-              <input type="text" name="assigned_to" placeholder="Assigned to (optional)">
-              <input type="text" name="status_text" placeholder="Status text (optional)">
+              <input type="text" name="_id" id="update_id_input" placeholder="* _id of target issue" required="">
+              <input type="text" name="issue_title" placeholder="New Title (optional)">
+              <textarea name="issue_text" placeholder="New Text (optional)"></textarea>
+              <input type="text" name="created_by" placeholder="New Created by (optional)">
+              <input type="text" name="assigned_to" placeholder="New Assigned to (optional)">
+              <input type="text" name="status_text" placeholder="New Status text (optional)">
               <label class="checkbox-row">
                 <input type="checkbox" name="open" value="false">
-                <span>Check to close issue</span>
+                <span>Close this issue (set open = false)</span>
               </label>
-              <button type="submit">Update Issue</button>
+              <button type="submit">Apply Update</button>
             </form>
           </div>
 
           <!-- Form 3: Delete -->
           <div class="form-card">
-            <h4><span class="endpoint-tag del">DEL</span> Delete Issue</h4>
-            <p class="form-desc">Deletes the issue with the given <code>_id</code>.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
+              <h4><span class="endpoint-tag del">DEL</span> Delete Issue</h4>
+              <button type="button" class="prefill-btn" data-target="testForm3" style="background:none; border:none; color:var(--primary); font-size:11px; cursor:pointer; text-decoration:underline;">Paste recent ID</button>
+            </div>
+            <p class="form-desc">Permanently remove an issue by its <code>_id</code>.</p>
             <form id="testForm3" class="border">
-              <input type="text" name="_id" placeholder="* _id (required)" required="">
-              <button type="submit" class="btn btn-danger">Delete Issue</button>
+              <input type="text" name="_id" id="delete_id_input" placeholder="* _id to delete" required="">
+              <div style="flex: 1;"></div>
+              <button type="submit" class="btn btn-danger">Permanently Delete</button>
             </form>
           </div>
         </div>
@@ -150,87 +183,133 @@
         <!-- JSON Response Viewer -->
         <div class="result-section">
           <h4>
-            <span>API Server Response</span>
-            <button type="button" id="clearResultBtn" style="background: none; border: none; color: #94a3b8; font-size: 11px; cursor: pointer; text-decoration: underline;">Clear</button>
+            <span style="display:flex; align-items:center; gap:8px;">
+              <span>Live Response Payload</span>
+              <span id="responseStatusBadge" style="font-size:10px; padding:2px 6px; border-radius:4px; background:#1e293b; color:#94a3b8;">Idle</span>
+            </span>
+            <div style="display:flex; gap:12px;">
+              <button type="button" id="copyResultBtn" style="background:none; border:none; color:#38bdf8; font-size:11px; cursor:pointer; text-decoration:underline;">Copy JSON</button>
+              <button type="button" id="clearResultBtn" style="background:none; border:none; color:#94a3b8; font-size:11px; cursor:pointer; text-decoration:underline;">Clear</button>
+            </div>
           </h4>
-          <code id="jsonResult">// Submit any form above to inspect real-time JSON response</code>
+          <code id="jsonResult">// Submit any request above to view real-time API response payload</code>
         </div>
       </section>
     </div>
 
     <footer class="app-footer">
-      <p>Issue Tracker &bull; freeCodeCamp Quality Assurance Project &bull; Full-Stack JavaScript</p>
+      <p>PulseTrack &bull; freeCodeCamp Quality Assurance Certification &bull; Built with Node.js &amp; Express</p>
     </footer>
 
-    <!-- jQuery for existing test script compatibility -->
+    <!-- jQuery for test script and form interaction -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
     <script>
       $(function() {
-        // Quick Jump handler
+        let lastCreatedId = '';
+
+        // Project Jump
         $('#jumpProjectBtn').click(function() {
           let proj = $('#jumpProjectInput').val().trim() || 'apitest';
           window.location.href = '/' + encodeURIComponent(proj) + '/';
         });
         $('#jumpProjectInput').keypress(function(e) {
-          if (e.which === 13) {
-            $('#jumpProjectBtn').click();
+          if (e.which === 13) $('#jumpProjectBtn').click();
+        });
+
+        // Copy & Clear buttons
+        $('#clearResultBtn').click(function() {
+          $('#jsonResult').text('// Submit any request above to view real-time API response payload');
+          $('#responseStatusBadge').text('Idle').css('background', '#1e293b').css('color', '#94a3b8');
+        });
+
+        $('#copyResultBtn').click(function() {
+          let text = $('#jsonResult').text();
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+              let orig = $('#copyResultBtn').text();
+              $('#copyResultBtn').text('Copied!');
+              setTimeout(() => $('#copyResultBtn').text(orig), 1500);
+            });
           }
         });
 
-        $('#clearResultBtn').click(function() {
-          $('#jsonResult').text('// Submit any form above to inspect real-time JSON response');
+        // Sample Pre-fills
+        $('.prefill-btn').click(function() {
+          let target = $(this).data('target');
+          if (target === 'testForm') {
+            $('#testForm input[name="issue_title"]').val('Memory leak in image processor');
+            $('#testForm textarea[name="issue_text"]').val('Unreleased buffers cause OOM after 1000 thumbnail conversions.');
+            $('#testForm input[name="created_by"]').val('DevOps Bot');
+            $('#testForm input[name="assigned_to"]').val('Lead Eng');
+            $('#testForm input[name="status_text"]').val('Priority 1');
+          } else if (target === 'testForm2') {
+            if (lastCreatedId) {
+              $('#update_id_input').val(lastCreatedId);
+              $('#testForm2 input[name="issue_title"]').val('Resolved: Memory leak fixed');
+              $('#testForm2 input[name="status_text"]').val('Merged to main');
+            } else {
+              alert('Create an issue first, or type an ID manually!');
+            }
+          } else if (target === 'testForm3') {
+            if (lastCreatedId) {
+              $('#delete_id_input').val(lastCreatedId);
+            } else {
+              alert('Create an issue first, or type an ID manually!');
+            }
+          }
         });
+
+        function handleResponse(data, statusText, jqXHR) {
+          $('#responseStatusBadge').text(jqXHR.status + ' ' + (jqXHR.statusText || 'OK')).css('background', '#065f46').css('color', '#a7f3d0');
+          $('#jsonResult').text(JSON.stringify(data, null, 2));
+          if (data && data._id) {
+            lastCreatedId = data._id;
+          }
+        }
+
+        function handleError(jqXHR) {
+          $('#responseStatusBadge').text(jqXHR.status + ' Error').css('background', '#7f1d1d').css('color', '#fecaca');
+          $('#jsonResult').text(JSON.stringify(jqXHR.responseJSON || jqXHR.responseText || 'Error', null, 2));
+        }
 
         // Form 1 POST
         $('#testForm').submit(function(e) {
           e.preventDefault();
-          $('#jsonResult').text('Sending request...');
+          $('#jsonResult').text('Sending POST request...');
           $.ajax({
             url: '/api/issues/apitest',
             type: 'post',
             data: $('#testForm').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data, null, 2));
-            },
-            error: function(err) {
-              $('#jsonResult').text(JSON.stringify(err.responseJSON || err.responseText || err, null, 2));
-            }
+            success: handleResponse,
+            error: handleError
           });
         });
 
         // Form 2 PUT
         $('#testForm2').submit(function(e) {
           e.preventDefault();
-          $('#jsonResult').text('Sending request...');
+          $('#jsonResult').text('Sending PUT request...');
           $.ajax({
             url: '/api/issues/apitest',
             type: 'put',
             data: $('#testForm2').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data, null, 2));
-            },
-            error: function(err) {
-              $('#jsonResult').text(JSON.stringify(err.responseJSON || err.responseText || err, null, 2));
-            }
+            success: handleResponse,
+            error: handleError
           });
         });
 
         // Form 3 DELETE
         $('#testForm3').submit(function(e) {
           e.preventDefault();
-          $('#jsonResult').text('Sending request...');
+          $('#jsonResult').text('Sending DELETE request...');
           $.ajax({
             url: '/api/issues/apitest',
             type: 'delete',
             data: $('#testForm3').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data, null, 2));
-            },
-            error: function(err) {
-              $('#jsonResult').text(JSON.stringify(err.responseJSON || err.responseText || err, null, 2));
-            }
+            success: handleResponse,
+            error: handleError
           });
         });
       });

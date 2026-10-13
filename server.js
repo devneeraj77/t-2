@@ -62,4 +62,12 @@ const listener = app.listen(process.env.PORT || 3000, function () {
   }
 });
 
+listener.on('error', function (err) {
+  if (err.code === 'EADDRINUSE') {
+    console.log(`Port ${process.env.PORT || 3000} is already in use. Server is already running.`);
+  } else {
+    console.error(err);
+  }
+});
+
 module.exports = app; //for testing

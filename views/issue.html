@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Issue Tracker - Project Page</title>
+    <title>PulseTrack &bull; Project Board</title>
     <link rel="icon" type="image/png" href="https://cdn.freecodecamp.org/universal/favicons/favicon-16x16.png" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,27 +13,43 @@
     <header class="app-header">
       <div class="header-container">
         <a href="/" class="brand">
-          <div class="brand-icon">✓</div>
-          <h1>Issue Tracker</h1>
+          <div class="brand-icon">⚡</div>
+          <div>
+            <h1>PulseTrack</h1>
+            <p style="font-size: 11px; color: var(--text-muted); font-weight: 500; margin-top: -2px;">Project Workspace</p>
+          </div>
         </a>
         <nav class="header-nav">
-          <a href="/" class="nav-link">&larr; Home &amp; API Console</a>
-          <a href="#" id="toggleFormBtn" class="nav-link btn-cta">+ New Issue</a>
+          <a href="/" class="nav-link">&larr; API Console &amp; Docs</a>
+          <button type="button" id="toggleFormBtn" class="nav-link btn-cta" style="border:none; cursor:pointer;">+ Create Issue</button>
         </nav>
       </div>
     </header>
 
     <div class="main-wrapper">
-      <!-- Project Header -->
-      <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;">
-        <div>
-          <h1 id='projectTitle' style="font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--text-main);"></h1>
-          <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Track, manage, and resolve tickets for this project.</p>
+      <!-- Project Title Banner & Stats Bar -->
+      <div style="margin-bottom: 24px;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h1 id='projectTitle' style="font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--text-main);"></h1>
+            <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Live tracking and issue resolution board.</p>
+          </div>
         </div>
-        <div style="display: flex; gap: 8px;" id="filterGroup">
-          <button type="button" class="btn btn-secondary filter-btn active" data-filter="all">All Issues</button>
-          <button type="button" class="btn btn-secondary filter-btn" data-filter="open">Open Only</button>
-          <button type="button" class="btn btn-secondary filter-btn" data-filter="closed">Closed Only</button>
+
+        <!-- Metric KPI Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 18px;">
+          <div style="background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow-sm);">
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Issues</div>
+            <div id="kpiTotal" style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-top: 4px;">0</div>
+          </div>
+          <div style="background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow-sm); border-left: 4px solid var(--open-border);">
+            <div style="font-size: 12px; color: #047857; font-weight: 600; text-transform: uppercase;">Open Issues</div>
+            <div id="kpiOpen" style="font-size: 24px; font-weight: 800; color: #047857; margin-top: 4px;">0</div>
+          </div>
+          <div style="background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow-sm); border-left: 4px solid var(--closed-border);">
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Resolved / Closed</div>
+            <div id="kpiClosed" style="font-size: 24px; font-weight: 800; color: var(--text-muted); margin-top: 4px;">0</div>
+          </div>
         </div>
       </div>
 
@@ -41,22 +57,44 @@
       <div id='submitNewIssue' class="card-panel">
         <div class="card-header">
           <h3>📝 Submit a New Issue</h3>
-          <span style="font-size: 12px; color: var(--text-muted);">* indicates required field</span>
+          <span style="font-size: 12px; color: var(--text-muted);">* Required fields</span>
         </div>
         <form id="newIssue" method="post" action="/api/">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
             <input type="text" name="issue_title" placeholder="* Issue Title" required="">
-            <input type="text" name="created_by" placeholder="* Created by" required="">
+            <input type="text" name="created_by" placeholder="* Created by (Your Name / Role)" required="">
           </div>
-          <textarea name="issue_text" placeholder="* Issue description and details..." style="min-height: 90px;" required=""></textarea>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
-            <input type="text" name="assigned_to" placeholder="(opt) Assigned to">
-            <input type="text" name="status_text" placeholder="(opt) Status text (e.g. In QA, Blocked)">
+          <textarea name="issue_text" placeholder="* Describe the issue, reproduction steps, or details..." style="min-height: 85px;" required=""></textarea>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
+            <input type="text" name="assigned_to" placeholder="Assigned to (Optional)">
+            <input type="text" name="status_text" placeholder="Status note (e.g. In Review, Critical)">
           </div>
-          <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
-            <button type="submit" class="btn" style="min-width: 160px;">Submit Issue &rarr;</button>
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+            <button type="button" id="cancelFormBtn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn">Publish Ticket &rarr;</button>
           </div>
         </form>
+      </div>
+
+      <!-- Filter & Search Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <!-- Filter Tabs -->
+        <div style="display: flex; gap: 8px;" id="filterGroup">
+          <button type="button" class="btn btn-secondary filter-btn active" data-filter="all" style="background: var(--primary); color: #fff;">
+            All (<span id="countAll">0</span>)
+          </button>
+          <button type="button" class="btn btn-secondary filter-btn" data-filter="open">
+            Open (<span id="countOpen">0</span>)
+          </button>
+          <button type="button" class="btn btn-secondary filter-btn" data-filter="closed">
+            Closed (<span id="countClosed">0</span>)
+          </button>
+        </div>
+
+        <!-- Live Instant Search -->
+        <div style="position: relative; min-width: 240px; flex: 1; max-width: 360px;">
+          <input type="text" id="searchInput" placeholder="Search issues by keyword, author, or ID..." style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; outline: none; background: #fff;">
+        </div>
       </div>
       
       <!-- Issue Display Container -->
@@ -64,7 +102,7 @@
     </div>
     
     <footer class="app-footer">
-      <p>Issue Tracker &bull; freeCodeCamp Quality Assurance Project</p>
+      <p>PulseTrack &bull; freeCodeCamp Quality Assurance Certification</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
@@ -77,48 +115,82 @@
         $('#projectTitle').text('All issues for: ' + currentProject);
 
         let allIssuesData = [];
+        let activeFilter = 'all';
 
-        function renderIssues(filter) {
-          let issues = [];
+        function updateCounts() {
+          let total = allIssuesData.length;
+          let open = allIssuesData.filter(i => i.open).length;
+          let closed = total - open;
+
+          $('#kpiTotal').text(total);
+          $('#kpiOpen').text(open);
+          $('#kpiClosed').text(closed);
+
+          $('#countAll').text(total);
+          $('#countOpen').text(open);
+          $('#countClosed').text(closed);
+        }
+
+        function renderIssues() {
+          let searchQuery = $('#searchInput').val().toLowerCase().trim();
           let filtered = allIssuesData;
-          if (filter === 'open') {
-            filtered = allIssuesData.filter(i => i.open);
-          } else if (filter === 'closed') {
-            filtered = allIssuesData.filter(i => !i.open);
+
+          if (activeFilter === 'open') {
+            filtered = filtered.filter(i => i.open);
+          } else if (activeFilter === 'closed') {
+            filtered = filtered.filter(i => !i.open);
+          }
+
+          if (searchQuery) {
+            filtered = filtered.filter(i => {
+              return (i.issue_title && i.issue_title.toLowerCase().includes(searchQuery)) ||
+                     (i.issue_text && i.issue_text.toLowerCase().includes(searchQuery)) ||
+                     (i.created_by && i.created_by.toLowerCase().includes(searchQuery)) ||
+                     (i.assigned_to && i.assigned_to.toLowerCase().includes(searchQuery)) ||
+                     (i._id && i._id.toLowerCase().includes(searchQuery)) ||
+                     (i.status_text && i.status_text.toLowerCase().includes(searchQuery));
+            });
           }
 
           if (filtered.length === 0) {
+            let msg = allIssuesData.length === 0 
+              ? `No issues created yet for workspace <b>${currentProject}</b>. Click <b>+ Create Issue</b> above to add one!` 
+              : `No issues match your current filter/search criteria.`;
             $('#issueDisplay').html(`
               <div class="empty-state">
-                <h4>No issues found</h4>
-                <p>There are no ${filter === 'all' ? '' : filter} issues recorded for project <b>${currentProject}</b>.</p>
+                <h4>No tickets found</h4>
+                <p>${msg}</p>
               </div>
             `);
             return;
           }
 
+          let issues = [];
           filtered.forEach(function(ele) {
             let openstatus = ele.open ? 'open' : 'closed';
             let pillClass = ele.open ? 'status-pill open' : 'status-pill closed';
-            let pillText = ele.open ? 'Open' : 'Closed';
-            
+            let pillText = ele.open ? 'Open' : 'Resolved';
+
             let single = [
               '<div class="issue ' + openstatus + '">',
                 '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">',
-                  '<p class="id" style="margin:0;">id: ' + ele._id + '</p>',
+                  '<div style="display:flex; align-items:center; gap:8px;">',
+                    '<p class="id" style="margin:0;">id: ' + ele._id + '</p>',
+                    '<button type="button" class="copy-id-btn" data-id="' + ele._id + '" style="background:none; border:none; color:var(--primary); font-size:11px; cursor:pointer;">Copy</button>',
+                  '</div>',
                   '<span class="' + pillClass + '">' + pillText + '</span>',
                 '</div>',
                 '<h3>' + ele.issue_title + ' - (' + openstatus + ')</h3>',
-                '<p style="margin: 8px 0; font-size: 15px; color: #1e293b;">' + (ele.issue_text || '') + '</p>',
-                ele.status_text ? '<p style="font-size:13px; color:#475569;"><b>Status note:</b> ' + ele.status_text + '</p>' : '',
+                '<p style="margin: 8px 0; font-size: 14.5px; color: #1e293b; white-space: pre-wrap;">' + (ele.issue_text || '') + '</p>',
+                ele.status_text ? '<p style="font-size:13px; color:#475569; background:#f8fafc; padding:4px 8px; border-radius:4px; display:inline-block;"><b>Status Note:</b> ' + ele.status_text + '</p>' : '',
                 '<div class="issue-meta-row">',
-                  '<span><b>Created by:</b> ' + (ele.created_by || 'Unknown') + '</span>',
-                  '<span><b>Assigned to:</b> ' + (ele.assigned_to || 'Unassigned') + '</span>',
-                  '<span><b>Created on:</b> ' + (ele.created_on || '') + '</span>',
-                  '<span><b>Last updated:</b> ' + (ele.updated_on || '') + '</span>',
+                  '<span><b>Reporter:</b> ' + (ele.created_by || 'Unknown') + '</span>',
+                  '<span><b>Assignee:</b> ' + (ele.assigned_to || 'Unassigned') + '</span>',
+                  '<span><b>Created:</b> ' + (ele.created_on || '') + '</span>',
+                  '<span><b>Updated:</b> ' + (ele.updated_on || '') + '</span>',
                 '</div>',
                 '<div class="issue-actions">',
-                  (ele.open ? '<a href="#" class="closeIssue" id="' + ele._id + '">&#10003; close?</a>' : '<span style="font-size:12px; color:#64748b; font-style:italic;">Issue closed</span>'),
+                  (ele.open ? '<a href="#" class="closeIssue" id="' + ele._id + '">&#10003; close?</a>' : '<a href="#" class="reopenIssue" data-id="' + ele._id + '" style="font-size:12px; font-weight:600; color:var(--primary); text-decoration:none; padding:6px 12px; background:#eff6ff; border-radius:6px; border:1px solid #bfdbfe;">&#8635; Reopen</a>'),
                   '<a href="#" class="deleteIssue" id="' + ele._id + '">&#128465; delete?</a>',
                 '</div>',
               '</div>'
@@ -129,27 +201,51 @@
         }
 
         // Fetch issues on load
-        $.ajax({
-          type: "GET",
-          url: url,
-          success: function(data) {
-            allIssuesData = data;
-            renderIssues('all');
-          }
+        function loadIssues() {
+          $.ajax({
+            type: "GET",
+            url: url,
+            success: function(data) {
+              allIssuesData = data;
+              updateCounts();
+              renderIssues();
+            }
+          });
+        }
+        loadIssues();
+
+        // Search input
+        $('#searchInput').on('input', function() {
+          renderIssues();
         });
 
-        // Filter buttons
+        // Filter tabs
         $('.filter-btn').click(function() {
           $('.filter-btn').removeClass('active').css('background', '#f1f5f9').css('color', 'var(--text-main)');
           $(this).addClass('active').css('background', 'var(--primary)').css('color', '#fff');
-          let f = $(this).data('filter');
-          renderIssues(f);
+          activeFilter = $(this).data('filter');
+          renderIssues();
         });
 
-        // Toggle form button
+        // Toggle form
         $('#toggleFormBtn').click(function(e) {
           e.preventDefault();
           $('#submitNewIssue').slideToggle(200);
+        });
+        $('#cancelFormBtn').click(function() {
+          $('#submitNewIssue').slideUp(200);
+        });
+
+        // Copy ID helper
+        $('#issueDisplay').on('click', '.copy-id-btn', function() {
+          let id = $(this).data('id');
+          let btn = $(this);
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(id).then(() => {
+              btn.text('Copied!');
+              setTimeout(() => btn.text('Copy'), 1200);
+            });
+          }
         });
         
         // Submit new issue
@@ -176,11 +272,23 @@
           });
         });
 
+        // Reopen issue
+        $('#issueDisplay').on('click','.reopenIssue', function(e) {
+          e.preventDefault();
+          let issueId = $(this).data('id');
+          $.ajax({
+            type: "PUT",
+            url: url,
+            data: {_id: issueId, open: true},
+            success: function(data) { window.location.reload(true); }
+          });
+        });
+
         // Delete issue
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
           e.preventDefault();
           let issueId = $(this).attr('id');
-          if (confirm('Are you sure you want to delete issue ' + issueId + '?')) {
+          if (confirm('Delete issue ' + issueId + '?')) {
             $.ajax({
               type: "DELETE",
               url: url,
