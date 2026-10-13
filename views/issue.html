@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Issue Tracker - Project Page</title>
+    <link rel="icon" type="image/png" href="https://cdn.freecodecamp.org/universal/favicons/favicon-16x16.png" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/public/style.css">
+  </head>
+  <body>
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <a href="/" class="brand">
+          <div class="brand-icon">✓</div>
+          <h1>Issue Tracker</h1>
+        </a>
+        <nav class="header-nav">
+          <a href="/" class="nav-link">&larr; Home &amp; API Console</a>
+          <a href="#" id="toggleFormBtn" class="nav-link btn-cta">+ New Issue</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="main-wrapper">
+      <!-- Project Header -->
+      <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;">
+        <div>
+          <h1 id='projectTitle' style="font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--text-main);"></h1>
+          <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Track, manage, and resolve tickets for this project.</p>
+        </div>
+        <div style="display: flex; gap: 8px;" id="filterGroup">
+          <button type="button" class="btn btn-secondary filter-btn active" data-filter="all">All Issues</button>
+          <button type="button" class="btn btn-secondary filter-btn" data-filter="open">Open Only</button>
+          <button type="button" class="btn btn-secondary filter-btn" data-filter="closed">Closed Only</button>
+        </div>
+      </div>
+
+      <!-- Submit Issue Card -->
+      <div id='submitNewIssue' class="card-panel">
+        <div class="card-header">
+          <h3>📝 Submit a New Issue</h3>
+          <span style="font-size: 12px; color: var(--text-muted);">* indicates required field</span>
+        </div>
+        <form id="newIssue" method="post" action="/api/">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+            <input type="text" name="issue_title" placeholder="* Issue Title" required="">
+            <input type="text" name="created_by" placeholder="* Created by" required="">
+          </div>
+          <textarea name="issue_text" placeholder="* Issue description and details..." style="min-height: 90px;" required=""></textarea>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+            <input type="text" name="assigned_to" placeholder="(opt) Assigned to">
+            <input type="text" name="status_text" placeholder="(opt) Status text (e.g. In QA, Blocked)">
+          </div>
+          <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+            <button type="submit" class="btn" style="min-width: 160px;">Submit Issue &rarr;</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Issue Display Container -->
+      <div id='issueDisplay'></div>
+    </div>
+    
+    <footer class="app-footer">
+      <p>Issue Tracker &bull; freeCodeCamp Quality Assurance Project</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+        let currentProject = window.location.pathname.replace(/\//g, "");
+        let url = "/api/issues/" + currentProject;
+        $('#projectTitle').text('All issues for: ' + currentProject);
+
+        let allIssuesData = [];
+
+        function renderIssues(filter) {
+          let issues = [];
+          let filtered = allIssuesData;
+          if (filter === 'open') {
+            filtered = allIssuesData.filter(i => i.open);
+          } else if (filter === 'closed') {
+            filtered = allIssuesData.filter(i => !i.open);
+          }
+
+          if (filtered.length === 0) {
+            $('#issueDisplay').html(`
+              <div class="empty-state">
+                <h4>No issues found</h4>
+                <p>There are no ${filter === 'all' ? '' : filter} issues recorded for project <b>${currentProject}</b>.</p>
+              </div>
+            `);
+            return;
+          }
+
+          filtered.forEach(function(ele) {
+            let openstatus = ele.open ? 'open' : 'closed';
+            let pillClass = ele.open ? 'status-pill open' : 'status-pill closed';
+            let pillText = ele.open ? 'Open' : 'Closed';
+            
+            let single = [
+              '<div class="issue ' + openstatus + '">',
+                '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">',
+                  '<p class="id" style="margin:0;">id: ' + ele._id + '</p>',
+                  '<span class="' + pillClass + '">' + pillText + '</span>',
+                '</div>',
+                '<h3>' + ele.issue_title + ' - (' + openstatus + ')</h3>',
+                '<p style="margin: 8px 0; font-size: 15px; color: #1e293b;">' + (ele.issue_text || '') + '</p>',
+                ele.status_text ? '<p style="font-size:13px; color:#475569;"><b>Status note:</b> ' + ele.status_text + '</p>' : '',
+                '<div class="issue-meta-row">',
+                  '<span><b>Created by:</b> ' + (ele.created_by || 'Unknown') + '</span>',
+                  '<span><b>Assigned to:</b> ' + (ele.assigned_to || 'Unassigned') + '</span>',
+                  '<span><b>Created on:</b> ' + (ele.created_on || '') + '</span>',
+                  '<span><b>Last updated:</b> ' + (ele.updated_on || '') + '</span>',
+                '</div>',
+                '<div class="issue-actions">',
+                  (ele.open ? '<a href="#" class="closeIssue" id="' + ele._id + '">&#10003; close?</a>' : '<span style="font-size:12px; color:#64748b; font-style:italic;">Issue closed</span>'),
+                  '<a href="#" class="deleteIssue" id="' + ele._id + '">&#128465; delete?</a>',
+                '</div>',
+              '</div>'
+            ];
+            issues.push(single.join(''));
+          });
+          $('#issueDisplay').html(issues.join(''));
+        }
+
+        // Fetch issues on load
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: function(data) {
+            allIssuesData = data;
+            renderIssues('all');
+          }
+        });
+
+        // Filter buttons
+        $('.filter-btn').click(function() {
+          $('.filter-btn').removeClass('active').css('background', '#f1f5f9').css('color', 'var(--text-main)');
+          $(this).addClass('active').css('background', 'var(--primary)').css('color', '#fff');
+          let f = $(this).data('filter');
+          renderIssues(f);
+        });
+
+        // Toggle form button
+        $('#toggleFormBtn').click(function(e) {
+          e.preventDefault();
+          $('#submitNewIssue').slideToggle(200);
+        });
+        
+        // Submit new issue
+        $('#newIssue').submit(function(e){
+          e.preventDefault();
+          $(this).attr('action', "/api/issues/" + currentProject);
+          $.ajax({
+            type: "POST",
+            url: url,
+            data: $(this).serialize(),
+            success: function(data) { window.location.reload(true); }
+          });
+        });
+        
+        // Close issue
+        $('#issueDisplay').on('click','.closeIssue', function(e) {
+          e.preventDefault();
+          let issueId = $(this).attr('id');
+          $.ajax({
+            type: "PUT",
+            url: url,
+            data: {_id: issueId, open: false},
+            success: function(data) { window.location.reload(true); }
+          });
+        });
+
+        // Delete issue
+        $('#issueDisplay').on('click','.deleteIssue', function(e) {
+          e.preventDefault();
+          let issueId = $(this).attr('id');
+          if (confirm('Are you sure you want to delete issue ' + issueId + '?')) {
+            $.ajax({
+              type: "DELETE",
+              url: url,
+              data: {_id: issueId},
+              success: function(data) { window.location.reload(true); }
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

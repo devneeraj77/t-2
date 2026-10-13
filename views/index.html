@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Issue Tracker</title>
+    <link rel="icon" type="image/png" href="https://cdn.freecodecamp.org/universal/favicons/favicon-16x16.png" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/public/style.css">
+  </head>
+  <body>
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <a href="/" class="brand">
+          <div class="brand-icon">✓</div>
+          <h1>Issue Tracker</h1>
+        </a>
+        <nav class="header-nav">
+          <a href="/apitest/" class="nav-link btn-cta">Open Project Board (apitest)</a>
+          <a href="#testui" class="nav-link">API Console</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="main-wrapper">
+      <!-- Hero / Introduction -->
+      <section class="hero-banner">
+        <h2>Modern &amp; Robust Issue Management</h2>
+        <p>A full-stack issue tracking API with complete filtering, project scoping, and real-time management.</p>
+      </section>
+
+      <!-- Quick Project Jump Bar -->
+      <div class="jump-bar">
+        <label for="jumpProjectInput" style="font-weight: 600; font-size: 14px; color: #1e40af;">
+          🔍 Jump to any Project Board:
+        </label>
+        <input type="text" id="jumpProjectInput" placeholder="Enter project name (e.g. apitest)" value="apitest">
+        <button type="button" class="btn" id="jumpProjectBtn">View Project &rarr;</button>
+      </div>
+
+      <!-- API Documentation Panel -->
+      <section class="card-panel">
+        <div class="card-header">
+          <h3>📖 API Reference &amp; Endpoints</h3>
+          <span style="font-size: 13px; color: var(--text-muted);">JSON Endpoints</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <span class="endpoint-tag get">GET</span>
+            <code>/api/issues/{project}</code>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              Retrieve all issues on a project. Filter by any field in query string: <code>?open=true&amp;assigned_to=Joe</code>
+            </p>
+          </div>
+          <div>
+            <span class="endpoint-tag post">POST</span>
+            <code>/api/issues/{project}</code>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              Create an issue with required fields: <code>issue_title</code>, <code>issue_text</code>, <code>created_by</code>.
+            </p>
+          </div>
+          <div>
+            <span class="endpoint-tag put">PUT</span>
+            <code>/api/issues/{project}</code>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              Update an issue by providing <code>_id</code> and any changed fields.
+            </p>
+          </div>
+          <div>
+            <span class="endpoint-tag del">DELETE</span>
+            <code>/api/issues/{project}</code>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              Delete an issue with <code>_id</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="code-sample-box">
+          <div style="color: #94a3b8; font-size: 11px; margin-bottom: 6px;">EXAMPLE RETURN SCHEMA:</div>
+<pre><code>[
+  { 
+    "_id": "5871dda29faedc3491ff93bb",
+    "issue_title": "Fix error in posting data",
+    "issue_text": "When we post data it has an error.",
+    "created_on": "2026-10-13T14:16:11.377Z",
+    "updated_on": "2026-10-13T14:16:11.377Z",
+    "created_by": "Joe",
+    "assigned_to": "Joe",
+    "open": true,
+    "status_text": "In QA"
+  }
+]</code></pre>
+        </div>
+      </section>
+
+      <!-- Interactive API Testing Suite -->
+      <section id="testui" class="card-panel">
+        <div class="card-header">
+          <h3>⚡ Interactive API Console (Testing on <i>apitest</i>)</h3>
+          <a href="/api/issues/apitest/" target="_blank" class="nav-link" style="padding: 4px 10px;">Raw JSON feed &nearr;</a>
+        </div>
+
+        <div class="forms-grid">
+          <!-- Form 1: Create -->
+          <div class="form-card">
+            <h4><span class="endpoint-tag post">POST</span> Create New Issue</h4>
+            <p class="form-desc">Creates an issue on project <b>apitest</b>.</p>
+            <form id="testForm" class="border">
+              <input type="text" name="issue_title" placeholder="* Title (required)" required="">
+              <textarea name="issue_text" placeholder="* Text description (required)" required=""></textarea>
+              <input type="text" name="created_by" placeholder="* Created by (required)" required="">
+              <input type="text" name="assigned_to" placeholder="Assigned to (optional)">
+              <input type="text" name="status_text" placeholder="Status text (optional)">
+              <button type="submit">Submit Issue</button>
+            </form>
+          </div>
+
+          <!-- Form 2: Update -->
+          <div class="form-card">
+            <h4><span class="endpoint-tag put">PUT</span> Update Issue</h4>
+            <p class="form-desc">Supply <code>_id</code> and any fields to modify.</p>
+            <form id="testForm2" class="border">
+              <input type="text" name="_id" placeholder="* _id (required)" required="">
+              <input type="text" name="issue_title" placeholder="Title (optional)">
+              <textarea name="issue_text" placeholder="Text (optional)"></textarea>
+              <input type="text" name="created_by" placeholder="Created by (optional)">
+              <input type="text" name="assigned_to" placeholder="Assigned to (optional)">
+              <input type="text" name="status_text" placeholder="Status text (optional)">
+              <label class="checkbox-row">
+                <input type="checkbox" name="open" value="false">
+                <span>Check to close issue</span>
+              </label>
+              <button type="submit">Update Issue</button>
+            </form>
+          </div>
+
+          <!-- Form 3: Delete -->
+          <div class="form-card">
+            <h4><span class="endpoint-tag del">DEL</span> Delete Issue</h4>
+            <p class="form-desc">Deletes the issue with the given <code>_id</code>.</p>
+            <form id="testForm3" class="border">
+              <input type="text" name="_id" placeholder="* _id (required)" required="">
+              <button type="submit" class="btn btn-danger">Delete Issue</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- JSON Response Viewer -->
+        <div class="result-section">
+          <h4>
+            <span>API Server Response</span>
+            <button type="button" id="clearResultBtn" style="background: none; border: none; color: #94a3b8; font-size: 11px; cursor: pointer; text-decoration: underline;">Clear</button>
+          </h4>
+          <code id="jsonResult">// Submit any form above to inspect real-time JSON response</code>
+        </div>
+      </section>
+    </div>
+
+    <footer class="app-footer">
+      <p>Issue Tracker &bull; freeCodeCamp Quality Assurance Project &bull; Full-Stack JavaScript</p>
+    </footer>
+
+    <!-- jQuery for existing test script compatibility -->
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+        // Quick Jump handler
+        $('#jumpProjectBtn').click(function() {
+          let proj = $('#jumpProjectInput').val().trim() || 'apitest';
+          window.location.href = '/' + encodeURIComponent(proj) + '/';
+        });
+        $('#jumpProjectInput').keypress(function(e) {
+          if (e.which === 13) {
+            $('#jumpProjectBtn').click();
+          }
+        });
+
+        $('#clearResultBtn').click(function() {
+          $('#jsonResult').text('// Submit any form above to inspect real-time JSON response');
+        });
+
+        // Form 1 POST
+        $('#testForm').submit(function(e) {
+          e.preventDefault();
+          $('#jsonResult').text('Sending request...');
+          $.ajax({
+            url: '/api/issues/apitest',
+            type: 'post',
+            data: $('#testForm').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data, null, 2));
+            },
+            error: function(err) {
+              $('#jsonResult').text(JSON.stringify(err.responseJSON || err.responseText || err, null, 2));
+            }
+          });
+        });
+
+        // Form 2 PUT
+        $('#testForm2').submit(function(e) {
+          e.preventDefault();
+          $('#jsonResult').text('Sending request...');
+          $.ajax({
+            url: '/api/issues/apitest',
+            type: 'put',
+            data: $('#testForm2').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data, null, 2));
+            },
+            error: function(err) {
+              $('#jsonResult').text(JSON.stringify(err.responseJSON || err.responseText || err, null, 2));
+            }
+          });
+        });
+
+        // Form 3 DELETE
+        $('#testForm3').submit(function(e) {
+          e.preventDefault();
+          $('#jsonResult').text('Sending request...');
+          $.ajax({
+            url: '/api/issues/apitest',
+            type: 'delete',
+            data: $('#testForm3').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data, null, 2));
+            },
+            error: function(err) {
+              $('#jsonResult').text(JSON.stringify(err.responseJSON || err.responseText || err, null, 2));
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
