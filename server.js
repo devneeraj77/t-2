@@ -2,8 +2,8 @@
 
 const express     = require('express');
 const bodyParser  = require('body-parser');
-const expect      = require('chai').expect;
 const cors        = require('cors');
+const path        = require('path');
 require('dotenv').config();
 
 const apiRoutes         = require('./routes/api.js');
@@ -12,25 +12,27 @@ const runner            = require('./test-runner');
 
 let app = express();
 
-app.use('/public', express.static(process.cwd() + '/public'));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use(cors({origin: '*'})); //For FCC testing purposes only
-
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Sample front-end
 app.route('/:project/')
-  .get(function (req, res) {
-    res.sendFile(process.cwd() + '/views/issue.html');
+  .get(function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'issue.html'), function (err) {
+      if (err) next(err);
+    });
   });
 
 //Index page (static HTML)
 app.route('/')
-  .get(function (req, res) {
-    res.sendFile(process.cwd() + '/views/index.html');
+  .get(function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'), function (err) {
+      if (err) next(err);
+    });
   });
 
 //For FCC testing purposes
@@ -46,28 +48,38 @@ app.use(function(req, res, next) {
     .send('Not Found');
 });
 
-//Start our server and tests!
-const listener = app.listen(process.env.PORT || 3000, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-  if(process.env.NODE_ENV==='test') {
-    console.log('Running Tests...');
-    setTimeout(function () {
-      try {
-        runner.run();
-      } catch(e) {
-        console.log('Tests are not valid:');
-        console.error(e);
-      }
-    }, 3500);
+//Global Error Handler Middleware (Prevents serverless 500 FUNCTION_INVOCATION_FAILED crashes)
+app.use(function(err, req, res, next) {
+  console.error('Unhandled server error:', err);
+  if (!res.headersSent) {
+    res.status(500).type('text').send(err.message || 'Internal Server Error');
   }
 });
 
-listener.on('error', function (err) {
-  if (err.code === 'EADDRINUSE') {
-    console.log(`Port ${process.env.PORT || 3000} is already in use. Server is already running.`);
-  } else {
-    console.error(err);
-  }
-});
+//Start server only in non-serverless environments
+if (!process.env.VERCEL) {
+  const listener = app.listen(process.env.PORT || 3000, function () {
+    console.log('Your app is listening on port ' + listener.address().port);
+    if(process.env.NODE_ENV==='test') {
+      console.log('Running Tests...');
+      setTimeout(function () {
+        try {
+          runner.run();
+        } catch(e) {
+          console.log('Tests are not valid:');
+          console.error(e);
+        }
+      }, 3500);
+    }
+  });
 
-module.exports = app; //for testing
+  listener.on('error', function (err) {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`Port ${process.env.PORT || 3000} is already in use. Continuing...`);
+    } else {
+      console.error(err);
+    }
+  });
+}
+
+module.exports = app; //for testing and serverless export

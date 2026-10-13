@@ -2,11 +2,16 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const crypto = require('crypto');
 
 class IssueStore {
   constructor(storageFilePath) {
-    this.storageFile = storageFilePath || path.join(process.cwd(), 'data', 'issues.json');
+    const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+    const defaultPath = isServerless
+      ? path.join(os.tmpdir(), 'issues.json')
+      : path.join(process.cwd(), 'data', 'issues.json');
+    this.storageFile = storageFilePath || defaultPath;
     this.issues = [];
     this.loadFromDisk();
   }
@@ -19,7 +24,7 @@ class IssueStore {
         if (!Array.isArray(this.issues)) this.issues = [];
       }
     } catch (e) {
-      console.warn('IssueStore: Could not load existing data from disk, using empty store.', e.message);
+      console.warn('IssueStore: Could not load data from disk, using memory store:', e.message);
       this.issues = [];
     }
   }
